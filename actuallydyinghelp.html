@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New This</title>
+
+  <!-- Latest compiled and minified CSS & JS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div>
+
+    <button id="start" onclick="startTimer()">start</button>
+    <button id="hiScore" onclick="highScore()">Hi-scores</button>
+
+
+<div id="quiz">
+    <div id="question"></div>
+    <button id="ans1" onclick="answer(this)"></button>
+    <button id="ans2" onclick="answer(this)"></button>
+    <button id="ans3" onclick="answer(this)"></button>
+    <button id="ans4" onclick="answer(this)"></button>    
+</div>
+
+    <h1>Timer:</h1>
+    <div id="countUp"></div>
+    <h2>Score:</h2>
+    <div id="score">0</div>
+
+    <h3>Results:</h3>
+    <div id="results"></div>
+
+</div>
+
+  <script>
+
+  var questions = {
+    question1: {
+        title: "What pokemon is number 151?",
+        items: ["snorlax","mew","mewtwo","pikachu"],
+        answer: "mew",
+    },
+    question2: {
+        title: "What is the base power of the move Fire Blast?",
+        items: ["75","90","110","55"],
+        answer: "110",
+    },
+    question3: {
+        title: "Which move does HM04 contain?",
+        items: ["cut","strength","surf","fly"],
+        answer: "strength",
+    },
+    question4: {
+        title: "Out of all the gen 1 pokemon, there are none that are currently what type?",
+        items: ["fairy","dragon","steel","dark"],
+        answer: "dark",
+    }
+  };
+
+  var checker = 0;
+  var points = 0;
+  var timer = 0;
+  var timerGoing = false;
+  var correct = "";
+  var questionNumber = 1;
+  var setTimer;
+  var score;
+
+function startTimer() {
+    if (timerGoing == false) {
+        timer = 120;
+        setTimer = setInterval(tick, 1000);
+        timerGoing = true;
+        showQuestion(questionNumber++);
+    }
+}
+
+function showQuestion(q) {
+            question = questions["question"+q];
+            document.getElementById("question").innerHTML = question.title;   
+            document.getElementById("ans1").innerText = question.items[0];
+            document.getElementById("ans2").innerText = question.items[1];       
+            document.getElementById("ans3").innerText = question.items[2];       
+            document.getElementById("ans4").innerText = question.items[3];
+            correct = question.answer;
+}
+
+function answer(e) { 
+    //alert(correct + " " + e.innerText)
+    if (correct == e.innerText) {
+        points++;
+    document.getElementById("score").innerHTML = (points);        
+    }
+    else {
+        timer -= 5;
+        if (timer <= 0) {
+            endQuiz();
+        }
+    }
+    if (questionNumber >= 5) {
+            endQuiz();
+        }
+    else {
+    showQuestion(questionNumber++);
+    }
+
+}
+function endQuiz() {
+    clearInterval(setTimer);
+    document.getElementById("results").innerHTML = timer * points / 5;
+    document.getElementById("quiz").innerHTML = "<input type=\"text\" id=\"name\"/><button id=\"submit\" onclick=\"setScore()\">submit</button>";
+    score = (timer * points / 5);
+
+}
+
+function setScore() {
+    localStorage[document.getElementById("name").value]= score
+}
+
+function highScore() {
+    s = "";
+    for(i in localStorage) {
+        s += i+ ":" + localStorage[i];
+    }
+    alert (s);
+}
+
+function tick() {
+    timer--;
+    if (timer <= 0) {
+            endQuiz();
+        }
+    document.getElementById("countUp").innerHTML = timer;
+}
+
+
+// make it to where if player imput == the number of the item the player gets a point
+
+
+</script>
+
+</body>
+</html>
